@@ -1,0 +1,73 @@
+answer_format: For each question present the reasoning followed by the correct answer.
+base_instruction: Lets think step by step.
+few_shot_count: 5
+generate_expert_identity: true
+generate_intent_keywords: false
+generate_reasoning: true
+max_eval_batches: 6
+min_correct_count: 3
+mutate_refine_iterations: 3
+mutation_rounds: 5
+num_train_examples: 20
+prompt_technique_name: critique_n_refine
+questions_batch_size: 1
+refine_instruction: true
+refine_task_eg_iterations: 3
+seen_set_size: 25
+style_variation: 5
+task_description: "\nYou will generate NATURAL Azerbaijani legal questions using only\
+  \ the provided statute chunks.\n\nGeneral constraints for question generation\n\
+  Language: All questions must be in Azerbaijani with correct grammar and legal phrasing.\n\
+  \nAnswerability: Each question must be answerable solely from the provided chunks\
+  \ without external knowledge.\n\nNatural phrasing: The question should sound like\
+  \ a real exam, legal practice, or case interview question, not artificial or overly\
+  \ literal.\n\nNo disclosure of metadata: Do NOT reveal or hint at document_id or\
+  \ chunk_id in the question text.\n\nNo long verbatim copy: Paraphrase statutory\
+  \ text into clear, plain Azerbaijani; short exact terms may be used if legally necessary.\n\
+  \nSpecificity: Avoid vague or generic questions; make sure the fact pattern or wording\
+  \ narrows the answer.\n\nNo ambiguity: There should be only one correct answer when\
+  \ using the provided chunks.\n\nCategory definitions for bucket\n1. single \u2014\
+  \ Single-statute\nThe answer is fully contained in one chunk.\n\nNo other chunk\
+  \ is needed.\n\nSignals: A standalone clause with a clear obligation, permission,\
+  \ prohibition, or process.\n\nCommon cue words: \u201Ct\u0259yin edilir\u201D, \u201C\
+  qada\u011Fand\u0131r\u201D, \u201Cicaz\u0259 verilir\u201D.\n\n2. multi \u2014 Multiple-statute\n\
+  The answer requires combining information from two or more chunks.\n\nCommon patterns:\n\
+  \nOne chunk defines a term, another explains the procedure.\n\nOne chunk sets a\
+  \ general rule, another describes the sanction.\n\nTip: If you cannot answer from\
+  \ a single chunk alone, it is multi.\n\n3. exceptions \u2014 Exceptions / definitions\
+  \ / cross-references\nThe main rule exists, but the answer hinges on:\n\nAn istisna\
+  \ clause (\u201Cistisna olaraq\u2026\u201D, \u201Cbu hallarda t\u0259tbiq edilmir\u201D\
+  ).\n\nA special definition that changes the normal meaning (\u201C\u2026 t\u0259\
+  rif edilir\u201D).\n\nA cross-reference to another law/article (\u201C\u2026 bu\
+  \ M\u0259c\u0259ll\u0259nin \u2026 madd\u0259sin\u0259 uy\u011Fun olaraq\u201D).\n\
+  \nTip: If the question is about a rule but requires recognizing a special carve-out,\
+  \ definition, or cross-reference, use exceptions.\n\n4. conflicts \u2014 Conflicts\
+  \ / hierarchy rules\nTwo provisions could apply, but one overrides the other.\n\n\
+  Common scenario:\n\nOne general rule and one special rule that limits or changes\
+  \ it.\n\nThe statute explicitly or implicitly states which takes priority.\n\nCue\
+  \ words: \u201C\xFCmumi qaydaya baxmayaraq\u201D, \u201Cx\xFCsusi hallarda\u201D\
+  , \u201C\xFCst\xFCnl\xFCk t\u0259\u015Fkil edir\u201D.\n\nTip: If both provisions\
+  \ seem relevant but the correct one depends on hierarchy, it is conflicts.\n\nOutput\
+  \ format\nReturn a JSON array.\nEach item must have:\n{\n  \"query\": \"Azerbaijani\
+  \ question\",\n  \"bucket\": \"single | multi | exceptions | conflicts\",\n  \"\
+  source_clauses\": [\"document_id:chunk_id\", \"...\"],\n  \"style\": \"direct |\
+  \ scenario | yesno\",\n  \"difficulty\": \"easy | medium | hard\",\n  \"rationale\"\
+  : \"T\u0259f\u0259rr\xFCatl\u0131 izah \u2013 bu sual\u0131n niy\u0259 bu kateqoriyaya\
+  \ aid oldu\u011Funu v\u0259 hans\u0131 qanunvericilik siqnallar\u0131na (m\u0259\
+  s\u0259l\u0259n, istisna ifad\u0259l\u0259ri, t\u0259rifl\u0259r, qayda \xFCst\xFC\
+  nl\xFCy\xFC, sanksiya madd\u0259si v\u0259 s.) \u0259sasland\u0131\u011F\u0131n\u0131\
+  \ izah edin\"\n}\nInstructions for the question itself\nDirect style: A clear legal\
+  \ question without a fact pattern (e.g., \u201C\u0130cra hakimiyy\u0259ti orqan\u0131\
+  n\u0131n q\u0259rar\u0131na qar\u015F\u0131 hans\u0131 m\xFCdd\u0259td\u0259 \u015F\
+  ikay\u0259t veril\u0259 bil\u0259r?\u201D).\n\nScenario style: Present a short,\
+  \ realistic fact pattern and ask what the law says (e.g., \u201C\u018Fli icaz\u0259\
+  siz olaraq tikinti apar\u0131r. Bu halda hans\u0131 t\u0259dbir g\xF6r\xFClm\u0259\
+  lidir?\u201D).\n\nYesno style: A closed question answerable by \u201Cb\u0259li/xeyr\u201D\
+  \ but requiring legal reasoning (e.g., \u201CVergi \xF6d\u0259yicisi s\u0259n\u0259\
+  dl\u0259ri t\u0259qdim etm\u0259dikd\u0259 inzibati m\u0259suliyy\u0259t t\u0259\
+  tbiq olunurmu?\u201D).\n\nDifficulty guidance:\n\nEasy: Simple recall from one chunk.\n\
+  \nMedium: Requires linking two clauses or interpreting wording.\n\nHard: Requires\
+  \ identifying an exception, resolving a conflict, or combining multiple legal elements.\n\
+  \n"
+top_n: 1
+unique_model_id: openai/gpt-oss-120b
